@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public class Firearm : MonoBehaviour
+public class Firearms : MonoBehaviour
 {
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private float _shootDelay;
-    [SerializeField] private GameObject _bullet;
+    [SerializeField] private Rigidbody _bullet;
     [SerializeField] private Transform _target;
 
     private void Start() =>
@@ -13,15 +13,20 @@ public class Firearm : MonoBehaviour
 
     private IEnumerator Fire()
     {
+        WaitForSeconds wait = new(_shootDelay);
+
         while (true)
         {
             Vector3 direction = (_target.position - transform.position).normalized;
-            GameObject bullet = Instantiate(_bullet, transform.position + direction, Quaternion.identity);
+            Rigidbody bullet = Instantiate(_bullet, transform.position + direction, Quaternion.identity);
 
-            bullet.GetComponent<Rigidbody>().transform.forward = direction;
-            bullet.GetComponent<Rigidbody>().velocity = _bulletSpeed * direction;
+            bullet.velocity = _bulletSpeed * direction;
+            bullet.transform.forward = direction;
 
-            yield return new WaitForSeconds(_shootDelay);
+            yield return wait;
         }
     }
+
+    private void OnDestroy() =>
+        StopCoroutine(Fire());
 }
