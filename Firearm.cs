@@ -26,7 +26,4 @@ public class Firearms : MonoBehaviour
             yield return wait;
         }
     }
-
-    private void OnDestroy() =>
-        StopCoroutine(Fire());
 }
