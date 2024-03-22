@@ -14,7 +14,7 @@ public class Patroller : MonoBehaviour
         _patrolPoints = new Transform[_patrol.childCount];
 
         for (int i = 0; i < _patrol.childCount; i++)
-            _patrolPoints[i] = _patrol.GetChild(i).GetComponent<Transform>();
+            _patrolPoints[i] = _patrol.GetChild(i);
     }
 
     private void Update()
@@ -24,17 +24,17 @@ public class Patroller : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, currentTarget.position, _speed * Time.deltaTime);
 
         if (transform.position == currentTarget.position)
-            TakeNextTarget();
+            SwitchTarget();
     }
 
-    private void TakeNextTarget()
+    private void SwitchTarget()
     {
-        if (_currentIndex == _patrolPoints.Length)
+        if (_currentIndex == _patrolPoints.Length - 1)
             _currentIndex = 0;
         else
             _currentIndex++;
 
-        Vector3 targetPosition = _patrolPoints[_currentIndex].transform.position;
+        Vector3 targetPosition = _patrolPoints[_currentIndex].position;
         transform.forward = targetPosition - transform.position;
     }
 }
